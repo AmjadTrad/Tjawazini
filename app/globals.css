@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-playfair);
+  --font-script: var(--font-vibes);
+}
+
+html,
+body {
+  background: #2a0006;
+  color: #fff;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.love-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, #c1121f 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 10% 90%, #780000 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, #9d0208 0%, transparent 70%),
+    linear-gradient(180deg, #3d0008 0%, #1a0003 100%);
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.12); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.08); }
+  70% { transform: scale(1); }
+}
+
+.heartbeat {
+  animation: heartbeat 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(255, 30, 60, 0.8)) drop-shadow(0 0 60px rgba(255, 0, 40, 0.5));
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--o, 0.5); }
+  90% { opacity: var(--o, 0.5); }
+  100% { transform: translateY(-115vh) rotate(25deg); opacity: 0; }
+}
+
+.floating-heart {
+  bottom: -4rem;
+  opacity: 0;
+  animation-name: float-up;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fade-up 0.9s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #fff 0%, #ffccd5 25%, #fff 50%, #ffccd5 75%, #fff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+.glow-btn {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset, 0 10px 40px -5px rgba(255, 20, 50, 0.7);
+}
+
+.glow-btn:hover {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4) inset, 0 14px 50px -5px rgba(255, 40, 70, 0.95);
+}
