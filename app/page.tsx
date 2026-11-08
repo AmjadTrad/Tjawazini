@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Fireworks from "./Fireworks";
-
 const noLabels = [
   "No",
   "mt2kde?",
@@ -158,7 +156,6 @@ export default function MarryMe() {
     return (
       <main className="love-bg relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 text-center">
         <FloatingHearts />
-        <Fireworks />
         <div className="relative z-10 flex flex-col items-center gap-6">
           <div className="fade-up text-8xl heartbeat">💍</div>
           <p className="fade-up font-script text-4xl text-rose-200" style={{ animationDelay: "0.2s" }}>
