@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Fireworks from "./Fireworks";
 
 const noLabels = [
@@ -84,24 +84,63 @@ export default function MarryMe() {
   const [noCount, setNoCount] = useState(0);
   const noRef = useRef<HTMLButtonElement>(null);
 
+  // Area the No button may occupy: the visible viewport, clear of mobile browser bars and the footer.
+  const bounds = (width: number, height: number) => {
+    const vv = window.visualViewport;
+    const w = vv?.width ?? window.innerWidth;
+    const h = Math.min(window.innerHeight, vv?.height ?? window.innerHeight);
+    const ox = vv?.offsetLeft ?? 0;
+    const oy = vv?.offsetTop ?? 0;
+    return {
+      minX: ox + 16,
+      maxX: ox + Math.max(16, w - width - 16),
+      minY: oy + 24,
+      maxY: oy + Math.max(24, h - height - 110),
+    };
+  };
+
   const dodge = () => {
     const btn = noRef.current;
     if (!btn) return;
     const { width, height, left, top } = btn.getBoundingClientRect();
-    const pad = 20;
-    const maxX = window.innerWidth - width - pad;
-    const maxY = window.innerHeight - height - pad;
+    const b = bounds(width, height);
 
     let x = left;
     let y = top;
     for (let i = 0; i < 30; i++) {
-      x = pad + Math.random() * Math.max(0, maxX - pad);
-      y = pad + Math.random() * Math.max(0, maxY - pad);
-      if (Math.hypot(x - left, y - top) > 150) break;
+      x = b.minX + Math.random() * (b.maxX - b.minX);
+      y = b.minY + Math.random() * (b.maxY - b.minY);
+      if (Math.hypot(x - left, y - top) > 120) break;
     }
     setNoPos({ x, y });
     setNoCount((c) => c + 1);
   };
+
+  useEffect(() => {
+    if (!noPos) return;
+    const keepVisible = () => {
+      const btn = noRef.current;
+      if (!btn) return;
+      const { width, height } = btn.getBoundingClientRect();
+      const b = bounds(width, height);
+      setNoPos((p) => {
+        if (!p) return p;
+        const x = Math.min(Math.max(p.x, b.minX), b.maxX);
+        const y = Math.min(Math.max(p.y, b.minY), b.maxY);
+        return x === p.x && y === p.y ? p : { x, y };
+      });
+    };
+    keepVisible();
+    const vv = window.visualViewport;
+    window.addEventListener("resize", keepVisible);
+    vv?.addEventListener("resize", keepVisible);
+    vv?.addEventListener("scroll", keepVisible);
+    return () => {
+      window.removeEventListener("resize", keepVisible);
+      vv?.removeEventListener("resize", keepVisible);
+      vv?.removeEventListener("scroll", keepVisible);
+    };
+  }, [noPos, noCount]);
 
   // Rendered outside the card once moving: the card's backdrop-blur/transform would trap position:fixed.
   const noButton = (
